@@ -65,8 +65,12 @@ for target_folder_name in target_folder_names:
     # 循环处理文件
     for file_name in file_list:
         try:
+            target_file_name = file_name
+            print(target_file_name,'streamfab' in target_folder_name and 'pages' in target_folder_name)
+            if 'streamfab' in target_folder_name and 'pages' in target_file_name:
+               target_file_name = file_name.replace('pages', 'pages/main')
             source_file = os.path.join(source_folder_name, file_name)
-            target_file = os.path.join(target_folder_name, file_name)
+            target_file = os.path.join(target_folder_name, target_file_name)
             os.makedirs(os.path.dirname(target_file), exist_ok=True)
 
             r_ = shutil.copy2(source_file, target_file)
