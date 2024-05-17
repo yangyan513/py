@@ -114,6 +114,14 @@ for target_folder_name in target_folder_names:
             # streamfab站的代码同步到主站忽略图片
             if 'dvdfab' in target_folder_name and target_file_name.startswith(("static/images", "static/webp")):
                continue
+            # dvdfab 站的活动同步到musicfab站文件改名
+            if 'musicfab' in target_folder_name and 'musicfab_promotion.vue' in file_name:
+               target_file_name = file_name.replace('musicfab_promotion', 'promotion')
+            
+            # musicfab 站的活动同步到dvdfab站文件改名
+            if 'musicfab' in source_folder_name and 'promotion.vue' in file_name:
+               target_file_name = file_name.replace('promotion', 'musicfab_promotion')
+            
             source_file = os.path.join(source_folder_name, file_name)
             target_file = os.path.join(target_folder_name, target_file_name)
             os.makedirs(os.path.dirname(target_file), exist_ok=True)
@@ -121,6 +129,31 @@ for target_folder_name in target_folder_names:
             r_ = shutil.copy2(source_file, target_file)
         except Exception as e:
             print(f"Error copying {source_file} to {target_file}: {e}")
+
+## musicfab 多语言 common_basc. 替换为 common.
+import os
+import re
+
+pattern = re.compile(r'common_basic\.')
+
+for folder_name in target_folder_names:
+    for file_path in file_list:
+        if 'musicfab' in folder_name:
+        # dvdfab 站的活动同步到musicfab站文件改名
+            if 'musicfab_promotion.vue' in file_path:
+                file_path = file_path.replace('musicfab_promotion.vue', 'promotion.vue')
+            full_file_path = os.path.join(folder_name, file_path)
+            if os.path.exists(full_file_path):
+                with open(full_file_path, 'rb') as f:
+                    content = f.read().decode('utf-8')
+
+                new_content = re.sub(pattern, 'common.', content)
+
+                with open(full_file_path, 'wb') as f:
+                    f.write(new_content.encode('utf-8'))
+
+print("muscifab 多语言 common_basc. 替换 为 common.，替换完成！")
+
 if len(file_list) == 0:
   print("没有可复制的文件！")
 else:
